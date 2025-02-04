@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class BlowListener : MonoBehaviour
 {
     [SerializeField] private float thresholdVolume = .02f;
     [SerializeField] private float thresholdHighFreq = .005f;
     private AudioClip audioClip;
-    private const int SampleRate = 44100; // Частота дискретизации
+    private const int SampleRate = 44100; 
     private string microphone;
 
     void Start()
@@ -32,8 +31,8 @@ public class BlowListener : MonoBehaviour
     void AnalyzeAudio()
     {
         float[] samples = new float[1024];
-        int position = Microphone.GetPosition(microphone) - 1024; // Получаем текущую позицию
-        if (position < 0) return; // Если позиция меньше нуля, выходим
+        int position = Microphone.GetPosition(microphone) - 1024;
+        if (position < 0) return; 
 
         audioClip.GetData(samples, position);
 
@@ -46,7 +45,7 @@ public class BlowListener : MonoBehaviour
 
         if (IsBlowing(samples, volume))
         {
-            Debug.Log("Игрок дует в микрофон!");
+            Debug.Log("Blow!");
         }
     }
 
@@ -54,25 +53,23 @@ public class BlowListener : MonoBehaviour
     {
         if (volume < thresholdVolume) return false;
 
-        // Проверка наличия высоких частот
         float highFreqEnergy = 0;
         int highFreqCount = 0;
 
         for (int i = 0; i < samples.Length; i++)
         {
-            if (i > 500) // Например, рассматриваем частоты выше 1000 Гц
+            if (i > 500) // рассматриваем частоты выше 1000 Гц
             {
                 highFreqEnergy += Mathf.Abs(samples[i]);
                 highFreqCount++;
             }
         }
 
-        // Если энергия высоких частот превышает определенный порог
         float avgHighFreqEnergy = highFreqCount > 0 ? highFreqEnergy / highFreqCount : 0;
         return avgHighFreqEnergy > thresholdHighFreq;
     }
 
-    void OnApplicationQuit()
+    private void OnDestroy()
     {
         Microphone.End(microphone);
     }
