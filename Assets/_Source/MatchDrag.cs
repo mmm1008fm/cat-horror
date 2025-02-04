@@ -1,129 +1,133 @@
+using System.Collections;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.UI;
+using TMPro;
 
-public class MatchDrag : MonoBehaviour
+
+public class CandleController : MonoBehaviour
 {
+    [Header("Настройки случайного гашения")]
+    [SerializeField] private bool enableRandomExtinguish = true;
+    [SerializeField] private float randomExtinguishIntervalMin = 5f;
+    [SerializeField] private float randomExtinguishIntervalMax = 15f;
+
+    [Header("Компоненты свечи")]
+    [SerializeField] private UnityEngine.Rendering.Universal.Light2D candleLight;
+    [SerializeField] private Animator candleAnimator;
+
+    [Header("UI для разжигания")]
+    [SerializeField] private Canvas extinguishCanvas; // Canvas, который появляется при тухлой свече
+    [SerializeField] private TMP_Text extinguishPromptText; // Текст с подсказкой
+
     [Header("Настройки спички")]
-    // Для работы с UI-элементом или объектом на сцене (если спичка – RectTransform, например, на Canvas)
-    [SerializeField] private RectTransform matchRect;
-    // Минимальное расстояние по оси Y (в пикселях или единицах экрана) для успешного удара
-    [SerializeField] private float requiredDragDistance = 100f;
-    // Продолжительность анимации перемещения спички
-    [SerializeField] private float animationDuration = 0.5f;
-    
-    [Header("Целевая область")]
-    // Объект, к которому должна переместиться спичка при успешном ударе (например, позиция на коробке)
-    [SerializeField] private Transform targetArea;
+    [SerializeField] private ParticleSystem sparkParticles; // Частицы искр
+    [SerializeField] private int requiredStrikes = 3; // Сколько раз нужно ударить спичкой
+    [SerializeField] private float strikeCooldown = 0.5f; // Задержка между ударами (если нужна)
 
-    [Header("Эффекты")]
-    // Частицы искр, которые проигрываются при удачном ударе
-    [SerializeField] private ParticleSystem sparkParticles;
-
-    // Исходная позиция спички (запоминается при старте)
-    private Vector3 initialPosition;
-    // Позиция мыши при начале перетаскивания
-    private Vector3 dragStartPosition;
-    // Флаг, что спичка в процессе перетаскивания
-    private bool isDragging = false;
+    private int strikeCount = 0;
+    private bool isExtinguished = false;
+    private bool isInInteraction = false;
 
     private void Start()
     {
-        // Запоминаем исходное положение спички (в мировых координатах)
-        if (matchRect != null)
-            initialPosition = matchRect.position;
-        else
-            initialPosition = transform.position;
+        if(enableRandomExtinguish)
+            StartCoroutine(RandomExtinguishRoutine());
+        
+        if(extinguishCanvas != null)
+            extinguishCanvas.enabled = false;
     }
 
-    // Вызывается при нажатии ЛКМ на коллайдере объекта
-    private void OnMouseDown()
+    // Корутина для случайного гашения свечи
+    private IEnumerator RandomExtinguishRoutine()
     {
-        isDragging = true;
-        dragStartPosition = Input.mousePosition;
+        while(true)
+        {
+            float waitTime = Random.Range(randomExtinguishIntervalMin, randomExtinguishIntervalMax);
+            yield return new WaitForSeconds(waitTime);
+            if(!isExtinguished) // Гасим только если свеча горит
+            {
+                ExtinguishCandle();
+            }
+        }
     }
 
-    // Вызывается при удержании ЛКМ и движении мыши
-    private void OnMouseDrag()
+    // Внешний вызов гашения (например, через триггер)
+    public void TriggerExtinguish()
     {
-        if (!isDragging)
+        if(!isExtinguished)
+            ExtinguishCandle();
+    }
+
+    // Гашение свечи: отключение света, проигрывание анимации и показ UI
+    private void ExtinguishCandle()
+    {
+        isExtinguished = true;
+
+        // Отключаем свет
+        if(candleLight != null)
+            candleLight.enabled = false;
+
+        // Запускаем анимацию гашения (если настроена)
+        if(candleAnimator != null)
+            candleAnimator.SetTrigger("Extinguish");
+
+        // Показываем UI-подсказку для взаимодействия
+        if(extinguishCanvas != null)
+            extinguishCanvas.enabled = true;
+
+        // Сбрасываем счётчик ударов спичкой
+        strikeCount = 0;
+        if(extinguishPromptText != null)
+            extinguishPromptText.text = $"Потрите спичку: {requiredStrikes} ударов осталось";
+
+        isInInteraction = true;
+    }
+
+    // Метод, вызываемый при ударе спичкой (например, через событие кнопки или OnMouseDown на объекте спички)
+    public void OnMatchStrike()
+    {
+        if(!isInInteraction)
             return;
 
-        // Обновляем позицию спички по положению мыши
-        Vector3 currentMousePos = Input.mousePosition;
-        if (matchRect != null)
-        {
-            matchRect.position = currentMousePos;
-        }
-        else
-        {
-            // Если объект не UI, можно преобразовать позицию из экрана в мировую
-            Vector3 worldPos = Camera.main.ScreenToWorldPoint(currentMousePos);
-            worldPos.z = transform.position.z;
-            transform.position = worldPos;
-        }
-    }
-
-    // Вызывается при отпускании ЛКМ
-    private void OnMouseUp()
-    {
-        isDragging = false;
-
-        Vector3 dragEndPosition = Input.mousePosition;
-        float dragDeltaY = dragStartPosition.y - dragEndPosition.y; // вычисляем перемещение вниз
-
-        // Проверяем, что движение было направлено вниз и достаточно длинное
-        if (dragDeltaY >= requiredDragDistance)
-        {
-            // Успешное движение – запускаем анимацию DoTween для перемещения спички в целевую область
-            ProcessSuccessfulDrag();
-        }
-        else
-        {
-            // Если движение не удовлетворяет условию – возвращаем спичку в исходное положение
-            ReturnMatchToInitial();
-        }
-    }
-
-    // Анимация успешного удара
-    private void ProcessSuccessfulDrag()
-    {
-        // Запускаем частиц искр
-        if (sparkParticles != null)
+        // Запускаем частицы искр
+        if(sparkParticles != null)
             sparkParticles.Play();
 
-        // Анимация перемещения спички в позицию целевой области
-        if (matchRect != null)
+        strikeCount++;
+
+        // Обновляем UI-подсказку
+        if(extinguishPromptText != null)
+            extinguishPromptText.text = $"Потрите спичку: {Mathf.Max(0, requiredStrikes - strikeCount)} удар(ов) осталось";
+
+        // Если достигнуто нужное количество ударов, запускаем зажигание свечи
+        if(strikeCount >= requiredStrikes)
         {
-            matchRect.DOMove(targetArea.position, animationDuration)
-                     .SetEase(Ease.OutBack)
-                     .OnComplete(() =>
-                     {
-                         // Здесь можно вызвать метод, инициирующий анимацию поджигания свечи
-                         Debug.Log("Спичка успешно проведена по целевой области!");
-                         // Пример: CandleController.Instance.IgniteCandle();
-                     });
-        }
-        else
-        {
-            transform.DOMove(targetArea.position, animationDuration)
-                     .SetEase(Ease.OutBack)
-                     .OnComplete(() =>
-                     {
-                         Debug.Log("Спичка успешно проведена по целевой области!");
-                     });
+            StartCoroutine(LightCandleRoutine());
         }
     }
 
-    // Анимация возврата спички в исходное положение
-    private void ReturnMatchToInitial()
+    // Корутина для поджигания свечи
+    private IEnumerator LightCandleRoutine()
     {
-        if (matchRect != null)
-        {
-            matchRect.DOMove(initialPosition, animationDuration).SetEase(Ease.InOutQuad);
-        }
-        else
-        {
-            transform.DOMove(initialPosition, animationDuration).SetEase(Ease.InOutQuad);
-        }
+        // Задержка для синхронизации (например, проигрывание финальной части анимации искр)
+        yield return new WaitForSeconds(0.5f);
+
+        // Запускаем анимацию поджигания
+        if(candleAnimator != null)
+            candleAnimator.SetTrigger("Light");
+
+        // Ждём окончания анимации (примерно 0.5 секунды, можно скорректировать)
+        yield return new WaitForSeconds(0.5f);
+
+        // Включаем свет
+        if(candleLight != null)
+            candleLight.enabled = true;
+
+        // Скрываем UI-подсказку
+        if(extinguishCanvas != null)
+            extinguishCanvas.enabled = false;
+
+        isExtinguished = false;
+        isInInteraction = false;
     }
 }
