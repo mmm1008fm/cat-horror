@@ -1,7 +1,6 @@
 ﻿using System;
 using GameAssembly.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GameAssembly.CandleSystem
 {
@@ -10,7 +9,7 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private LayerMask matchBoxLayer;
     [SerializeField] private float minFrictionForFire;
     [SerializeField] private float frictionAccumulationSpeed;
-    [FormerlySerializedAs("matchLighter")] [SerializeField] private CandleLighter candleLighter;
+    [SerializeField] private CandleLighter candleLighter;
     
     private Camera _mainCamera;
     

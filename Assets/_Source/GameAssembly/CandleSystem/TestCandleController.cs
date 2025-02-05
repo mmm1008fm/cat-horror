@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameAssembly.CandleSystem
 {
-    public class CandleController : MonoBehaviour
+    public class TestCandleController : MonoBehaviour
     {
         [Header("Настройки случайного гашения")]
         [SerializeField] private bool enableRandomExtinguish = true;
