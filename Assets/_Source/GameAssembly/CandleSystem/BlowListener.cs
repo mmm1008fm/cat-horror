@@ -6,16 +6,22 @@ namespace GameAssembly.CandleSystem
     {
         [SerializeField] private float thresholdVolume = .02f;
         [SerializeField] private float thresholdHighFreq = .005f;
-        private AudioClip audioClip;
+        private AudioClip _audioClip;
         private const int SampleRate = 44100; 
-        private string microphone;
+        private string _microphone;
+        private const int FrequencyThreshold = 500;
 
-        void Start()
+        private void Start()
+        {
+            StartMicrophone();
+        }
+
+        private void StartMicrophone()
         {
             if (Microphone.devices.Length > 0)
             {
-                microphone = Microphone.devices[0]; 
-                audioClip = Microphone.Start(microphone, true, 10, SampleRate);
+                _microphone = Microphone.devices[0]; 
+                _audioClip = Microphone.Start(_microphone, true, 10, SampleRate);
             }
             else
             {
@@ -23,18 +29,18 @@ namespace GameAssembly.CandleSystem
             }
         }
 
-        void Update()
+        private void Update()
         {
             AnalyzeAudio();
         }
 
-        void AnalyzeAudio()
+        private void AnalyzeAudio()
         {
             float[] samples = new float[1024];
-            int position = Microphone.GetPosition(microphone) - 1024;
+            int position = Microphone.GetPosition(_microphone) - 1024;
             if (position < 0) return; 
 
-            audioClip.GetData(samples, position);
+            _audioClip.GetData(samples, position);
 
             float volume = 0;
             foreach (float sample in samples)
@@ -45,11 +51,11 @@ namespace GameAssembly.CandleSystem
 
             if (IsBlowing(samples, volume))
             {
-                Debug.Log("Blow!");
+                Debug.Log("Detected! You are blowing or speaking!");
             }
         }
 
-        bool IsBlowing(float[] samples, float volume)
+        private bool IsBlowing(float[] samples, float volume)
         {
             if (volume < thresholdVolume) return false;
 
@@ -58,7 +64,7 @@ namespace GameAssembly.CandleSystem
 
             for (int i = 0; i < samples.Length; i++)
             {
-                if (i > 500) // рассматриваем частоты выше 1000 Гц
+                if (i > FrequencyThreshold) // frequencies above 1000 Hz
                 {
                     highFreqEnergy += Mathf.Abs(samples[i]);
                     highFreqCount++;
@@ -71,7 +77,7 @@ namespace GameAssembly.CandleSystem
 
         private void OnDestroy()
         {
-            Microphone.End(microphone);
+            Microphone.End(_microphone);
         }
     }
 }
