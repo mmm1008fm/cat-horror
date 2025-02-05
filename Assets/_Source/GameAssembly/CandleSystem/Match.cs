@@ -13,6 +13,8 @@ namespace GameAssembly.CandleSystem
     [Space]
     [SerializeField] private ParticleSystem sparkles;
     [SerializeField] private float sparklesSpeedThreshold;
+    [Space]
+    [SerializeField] private bool debug;
     
     private Camera _mainCamera;
     
@@ -46,8 +48,11 @@ namespace GameAssembly.CandleSystem
       EmitSparkles();
       TryLightCandle();
 #if UNITY_EDITOR
-      Debug.Log($"FRICTION: {_currFriction}");
-      Debug.Log($"SPEED: {_dragSpeed}");
+      if (debug)
+      {
+        Debug.Log($"FRICTION: {_currFriction}");
+        Debug.Log($"SPEED: {_dragSpeed}");
+      }
 #endif
     }
 

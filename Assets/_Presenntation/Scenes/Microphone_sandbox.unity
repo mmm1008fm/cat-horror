@@ -1536,6 +1536,7 @@ MonoBehaviour:
   candleLighter: {fileID: 860629177}
   sparkles: {fileID: 892582571}
   sparklesSpeedThreshold: 15
+  debug: 0
 --- !u!50 &684096513
 Rigidbody2D:
   serializedVersion: 4
@@ -2261,8 +2262,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcfa9ceebb4279246bc670b8d740676c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thresholdVolume: 0.02
-  thresholdHighFreq: 0.005
+  thresholdVolume: 0.01
+  thresholdHighFreq: 0.05
+  blowThreshold: 10
+  blowAccumulatingSpeed: 10
+  debug: 0
 --- !u!4 &842924076
 Transform:
   m_ObjectHideFlags: 0
