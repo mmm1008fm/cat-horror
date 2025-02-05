@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 
 public class DoorTeleporter : MonoBehaviour
 {
     [Header("Настройки телепортации")]
     [Tooltip("Объект, который нужно телепортировать (например, игрок)")]
     [SerializeField] private GameObject objectToTeleport;
+    [SerializeField] private GameObject cameraToTeleport;
     [Tooltip("Позиция, куда будет телепортирован объект. Может меняться во время игры.")]
     [SerializeField] private Transform teleportDestination;
 
@@ -46,59 +48,38 @@ public class DoorTeleporter : MonoBehaviour
         {
             if(Input.GetKeyDown(teleportKey))
             {
-                StartCoroutine(TeleportRoutine());
+                TeleportRoutine();
             }
         }
     }
 
-    private IEnumerator TeleportRoutine()
+    private void TeleportRoutine()
     {
         isTeleporting = true;
-        // Затемнение экрана (fade out)
-        yield return StartCoroutine(Fade(0, 1, fadeDuration));
+        fadeImage.DOFade(1, fadeDuration)
+        .OnComplete(() =>
+         {
+            fadeImage.DOFade(0, fadeDuration).OnComplete(() =>
+            {
+                isTeleporting = false;
+            });
+            if(objectToTeleport != null && teleportDestination != null)
+            {
+                objectToTeleport.transform.position = teleportDestination.position;
+                cameraToTeleport.transform.position = teleportDestination.position;
+            }
+        });
 
-        // Телепортация объекта к целевой позиции
-        if(objectToTeleport != null && teleportDestination != null)
-        {
-            objectToTeleport.transform.position = teleportDestination.position;
-        }
-
-        // Осветление экрана (fade in)
-        yield return StartCoroutine(Fade(1, 0, fadeDuration));
-
-        isTeleporting = false;
+        
     }
 
-    // Корутин для плавного изменения прозрачности fadeImage
-    private IEnumerator Fade(float startAlpha, float endAlpha, float duration)
-    {
-        if(fadeImage == null)
-            yield break;
-
-        float elapsed = 0f;
-        Color c = fadeImage.color;
-        while(elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / duration);
-            c.a = alpha;
-            fadeImage.color = c;
-            yield return null;
-        }
-        c.a = endAlpha;
-        fadeImage.color = c;
-    }
-
-    // При входе в зону двери (триггер)
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Проверяем, является ли вошедший объект нужным (например, игроком)
         if(collision.gameObject == objectToTeleport)
         {
             playerInRange = true;
             if(promptUI != null)
             {
-                // Если на UI-панели есть компонент Text, обновляем текст подсказки
                 Text textComp = promptUI.GetComponentInChildren<Text>();
                 if(textComp != null)
                 {
@@ -109,7 +90,6 @@ public class DoorTeleporter : MonoBehaviour
         }
     }
 
-    // При выходе из зоны двери (триггер)
     private void OnTriggerExit2D(Collider2D collision)
     {
         if(collision.gameObject == objectToTeleport)
