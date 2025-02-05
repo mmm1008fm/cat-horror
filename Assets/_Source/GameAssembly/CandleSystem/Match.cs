@@ -10,6 +10,9 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private float minFrictionForFire;
     [SerializeField] private float frictionAccumulationSpeed;
     [SerializeField] private CandleLighter candleLighter;
+    [Space]
+    [SerializeField] private ParticleSystem sparkles;
+    [SerializeField] private float sparklesSpeedThreshold;
     
     private Camera _mainCamera;
     
@@ -40,6 +43,7 @@ namespace GameAssembly.CandleSystem
     {
       CountDragSpeed();
       AccumulateFriction();
+      EmitSparkles();
       TryLightCandle();
 #if UNITY_EDITOR
       Debug.Log($"FRICTION: {_currFriction}");
@@ -63,6 +67,12 @@ namespace GameAssembly.CandleSystem
       if (!candleLighter.IsLit() 
           && _currFriction >= minFrictionForFire)
         candleLighter.TurnOnCandle();
+    }
+
+    private void EmitSparkles()
+    {
+      if (_isOverBox && _dragSpeed > sparklesSpeedThreshold)
+        sparkles.Play();
     }
 
     #region trigger events
