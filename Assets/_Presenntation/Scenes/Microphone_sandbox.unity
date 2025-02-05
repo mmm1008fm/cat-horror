@@ -2262,11 +2262,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcfa9ceebb4279246bc670b8d740676c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thresholdVolume: 0.01
+  thresholdVolume: {x: 0.01, y: 1}
   thresholdHighFreq: 0.05
+  FrequencyThreshold: 500
   blowThreshold: 10
   blowAccumulatingSpeed: 10
-  debug: 0
+  debug: 1
 --- !u!4 &842924076
 Transform:
   m_ObjectHideFlags: 0
