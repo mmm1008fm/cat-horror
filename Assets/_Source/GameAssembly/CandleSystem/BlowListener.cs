@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace GameAssembly.CandleSystem
@@ -12,6 +13,8 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private float blowThreshold;
     [SerializeField] private float blowAccumulatingSpeed;
     [Space]
+    [SerializeField] private DynamicCandleFlicker candle;
+    [Space]
     [SerializeField] private bool debug;
 
     private AudioClip _audioClip;
@@ -20,7 +23,7 @@ namespace GameAssembly.CandleSystem
 
     private bool _isBlowing;
     private float _currBlowForce;
-
+    
     private void Start()
     {
       StartMicrophone();
@@ -106,6 +109,7 @@ namespace GameAssembly.CandleSystem
     {
       if (_currBlowForce > blowThreshold)
       {
+        candle.TurnOn(false);
 #if UNITY_EDITOR
         if (debug)
           Debug.Log("BLOW ACCUMULATED! TURN OFF CANDLE!");

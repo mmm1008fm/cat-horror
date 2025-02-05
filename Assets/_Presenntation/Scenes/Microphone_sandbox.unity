@@ -2265,8 +2265,9 @@ MonoBehaviour:
   thresholdVolume: {x: 0.01, y: 1}
   thresholdHighFreq: 0.05
   FrequencyThreshold: 500
-  blowThreshold: 10
+  blowThreshold: 2
   blowAccumulatingSpeed: 10
+  candle: {fileID: 1330852697}
   debug: 1
 --- !u!4 &842924076
 Transform:
