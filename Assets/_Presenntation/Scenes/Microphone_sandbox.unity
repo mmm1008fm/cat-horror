@@ -8557,7 +8557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   candleLight: {fileID: 1330852698}
   playerRb: {fileID: 836518656}
-  baseIntensity: 1
+  baseIntensity: 0.8
   staticVariance: 0.93
   movingVariance: 10
   movementThreshold: 0.01

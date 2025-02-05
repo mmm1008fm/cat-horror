@@ -42,7 +42,11 @@ namespace GameAssembly.CandleSystem
 #endif
     }
 
-    public void TurnOn(bool enable) => IsFlickering = enable;
+    public void TurnOn(bool enable)
+    {
+      IsFlickering = enable;
+      candleLight.intensity = enable ? baseIntensity : 0;
+    }
 
     private void PerformFlicker()
     {
@@ -82,7 +86,7 @@ namespace GameAssembly.CandleSystem
     private void DebugTurnOff()
     {
       if (Input.GetKeyDown(KeyCode.P))
-        IsFlickering = false;
+        TurnOn(false);
     }
   }
 }
