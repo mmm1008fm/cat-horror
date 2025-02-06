@@ -13,9 +13,9 @@ namespace GameAssembly.CandleSystem
 
     private void Update()
     {
-      #if UNITY_EDITOR
+#if UNITY_EDITOR
       DebugTurnOff();
-      #endif
+#endif
     }
     public void Enable(bool enable)
     {
@@ -26,19 +26,21 @@ namespace GameAssembly.CandleSystem
     
     public void TurnOn(bool enable) => dynamicCandleFlicker.TurnOn(enable);
     public bool IsLit() => dynamicCandleFlicker.IsFlickering;
+    public void Disable() => StartCoroutine(DelayedEnable(false, disableDelay));
+
     private void DebugTurnOff()
     {
       if (Input.GetKeyDown(KeyCode.P))
-        {
+      {
         TurnOn(false);
         Enable(true);
-        }
+      }
     }
-    private IEnumerator DelayedDisable(bool enable, float delay)
+
+    private IEnumerator DelayedEnable(bool enable, float delay)
     {
         yield return new WaitForSeconds(delay);
         Enable(false);
     }
-    public void Disable() => StartCoroutine(DelayedDisable(false, disableDelay));
   }
 }

@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 
 namespace EditorAssembly
 {
+#if UNITY_EDITOR
     public static class SceneSwitcherUtil
     {
         private const string MAIN_SCENE_PATH = "Assets/_Presentation/Scenes/MainScene.unity";
@@ -26,4 +27,5 @@ namespace EditorAssembly
         [MenuItem("Cat/Meow-Meow")]
         public static void MeowButton() => Debug.Log("Meow");
     }
+#endif
 }
