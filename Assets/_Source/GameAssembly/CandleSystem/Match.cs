@@ -71,7 +71,10 @@ namespace GameAssembly.CandleSystem
     {
       if (!candleLighter.IsLit() 
           && _currFriction >= minFrictionForFire)
-        candleLighter.TurnOnCandle();
+        {
+        candleLighter.TurnOn(true);
+        candleLighter.Disable();
+        }
     }
 
     private void EmitSparkles()
