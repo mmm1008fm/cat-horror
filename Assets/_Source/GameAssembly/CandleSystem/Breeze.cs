@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using GameAssembly.Utils;
 using UnityEngine;
 
 namespace GameAssembly.CandleSystem
@@ -10,9 +9,15 @@ namespace GameAssembly.CandleSystem
         [Tooltip("<b>X</b> - from, <b>Y</b> - to")]
         [SerializeField] private Vector2 delayRange;
         [SerializeField] private Monster monster;
+        [SerializeField] private LayerMask dangerousLayerMask;
 
         private float _currTime;
         private bool _isReadyToSendMonster;
+
+        private void Awake()
+        {
+            _currTime = GetDelay();
+        }
 
         private void Update()
         {
@@ -23,7 +28,7 @@ namespace GameAssembly.CandleSystem
         {
             if (_currTime <= 0)
             {
-                _currTime = UnityEngine.Random.Range(delayRange.x, delayRange.y);
+                _currTime = GetDelay();
                 SetReadyMonsterSend(true);
             }
             else if (!_isReadyToSendMonster)
@@ -32,27 +37,35 @@ namespace GameAssembly.CandleSystem
             }
         }
 
+        private float GetDelay() => UnityEngine.Random.Range(delayRange.x, delayRange.y);
+
         private void SetReadyMonsterSend(bool isReady) => _isReadyToSendMonster = isReady;
 
-        private void SendMonster(Vector3 startPos, Vector3[] path, Action finishCallback = null)
+        private void TrySendMonster(Vector3 startPos, Vector3[] path, Action finishCallback = null)
         {
             if (_isReadyToSendMonster)
             {
                 _isReadyToSendMonster = false;
-                monster.Enable(true, startPos, path, finishCallback);
+                monster.Enable(startPos, path, finishCallback);
             }
         }
 
-        #region trigger events
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnMonsterHide()
         {
-            //TODO 
+            Debug.Log("MONSTER HIDE");
         }
 
-        private void OnTriggerExit(Collider other)
+        #region trigger events
+
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            //TODO
+            if (LayerMaskUtil.ContainsLayer(dangerousLayerMask, collision.gameObject.layer))
+            {
+                if (collision.TryGetComponent(out DangerousZone dangerousZone))
+                    TrySendMonster(dangerousZone.GetSpawnPoint(), dangerousZone.GetPath(), OnMonsterHide);
+            }
         }
+
         #endregion
     }
 }
