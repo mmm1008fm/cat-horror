@@ -2,19 +2,30 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameAssembly.CandleSystem
 {
   public class Monster : MonoBehaviour
   {
     [SerializeField] private float moveSpeed;
+    [SerializeField] private AudioClip[] monsterSoundPool;
+    [SerializeField] private AudioSource monsterSource;
     private float _currInterpolation;
 
     public void Enable(Vector3 startPos, Vector3[] path, Action finishCallback = null)
     {
       gameObject.SetActive(true);
       gameObject.transform.position = startPos;
+      PlayEnableSound();
       StartCoroutine(MoveOnPath(path, finishCallback));
+    }
+
+    private void PlayEnableSound()
+    {
+      if (!monsterSource || monsterSoundPool.Length <= 0) return;
+      monsterSource.clip = monsterSoundPool[Random.Range(0, monsterSoundPool.Length)];
+      monsterSource.Play();
     }
 
     private void Disable()
