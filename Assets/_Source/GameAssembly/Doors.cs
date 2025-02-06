@@ -15,8 +15,8 @@ public class DoorTeleporter : MonoBehaviour
     [Header("Настройки взаимодействия")]
     [Tooltip("Клавиша для активации телепортации")]
     [SerializeField] private KeyCode teleportKey = KeyCode.E;
-    [Tooltip("Текст подсказки, который выводится при подходе к двери")]
-    [SerializeField] private string promptMessage = "Нажмите E чтобы войти";
+    // [Tooltip("Текст подсказки, который выводится при подходе к двери")]
+    // [SerializeField] private string promptMessage = "Нажмите E чтобы войти";
     [Tooltip("UI-панель с подсказкой (например, с компонентом Text), которую можно включать/выключать")]
     [SerializeField] private GameObject promptUI;
 
@@ -81,10 +81,10 @@ public class DoorTeleporter : MonoBehaviour
             if(promptUI != null)
             {
                 Text textComp = promptUI.GetComponentInChildren<Text>();
-                if(textComp != null)
-                {
-                    textComp.text = promptMessage;
-                }
+                // if(textComp != null)
+                // {
+                //     textComp.text = promptMessage;
+                // }
                 promptUI.SetActive(true);
             }
         }
