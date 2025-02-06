@@ -110,7 +110,7 @@ namespace GameAssembly.CandleSystem
       if (_currBlowForce > blowThreshold)
       {
         candle.TurnOn(false);
-        candle.Enable(true);
+        candle.EnableMinigame(true);
 #if UNITY_EDITOR
         if (debug)
           Debug.Log("BLOW ACCUMULATED! TURN OFF CANDLE!");

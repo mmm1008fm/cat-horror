@@ -1,6 +1,7 @@
 using System;
 using GameAssembly.Utils;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GameAssembly.CandleSystem
 { 
@@ -8,9 +9,11 @@ namespace GameAssembly.CandleSystem
   {
         [Tooltip("<b>X</b> - from, <b>Y</b> - to")]
         [SerializeField] private Vector2 delayRange;
+        [SerializeField, Range(0, 1)] private float monsterChance;
         [SerializeField] private Monster monster;
         [SerializeField] private LayerMask dangerousLayerMask;
         [SerializeField] private Killer killer;
+        [SerializeField] private CandleLighter candle;
 
         private float _currTime;
         private bool _isReadyToSendMonster;
@@ -30,7 +33,7 @@ namespace GameAssembly.CandleSystem
             if (_currTime <= 0)
             {
                 _currTime = GetDelay();
-                SetReadyMonsterSend(true);
+                TrickOrTreat();
             }
             else if (!_isReadyToSendMonster)
             {
@@ -38,9 +41,23 @@ namespace GameAssembly.CandleSystem
             }
         }
 
-        private float GetDelay() => UnityEngine.Random.Range(delayRange.x, delayRange.y);
+        private float GetDelay() => Random.Range(delayRange.x, delayRange.y);
+
+        private void TrickOrTreat()
+        {
+            float monsterSpawnChance = Random.Range(0, 1);
+            if (monsterSpawnChance < monsterChance)
+                SetReadyMonsterSend(true);
+            else ForceBlow();
+        }
 
         private void SetReadyMonsterSend(bool isReady) => _isReadyToSendMonster = isReady;
+
+        private void ForceBlow()
+        {
+            candle.TurnOn(false);
+            candle.EnableMinigame(true);
+        }
 
         private void TrySendMonster(Vector3 startPos, Vector3[] path, Action finishCallback = null)
         {

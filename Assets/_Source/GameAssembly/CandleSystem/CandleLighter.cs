@@ -15,7 +15,7 @@ namespace GameAssembly.CandleSystem
 
     public event Action OnCandleTurnOn;
 
-    public void Enable(bool enable)
+    public void EnableMinigame(bool enable)
     {
         gameObject.SetActive(enable);
         playerMovement.EnableMovement(!enable);
@@ -43,14 +43,14 @@ namespace GameAssembly.CandleSystem
       if (Input.GetKeyDown(KeyCode.P))
       {
         TurnOn(false);
-        Enable(true);
+        EnableMinigame(true);
       }
     }
 
     private IEnumerator DelayedEnable(bool enable, float delay)
     {
         yield return new WaitForSeconds(delay);
-        Enable(false);
+        EnableMinigame(false);
     }
   }
 }
