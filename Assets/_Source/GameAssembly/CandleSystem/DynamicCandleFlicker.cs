@@ -19,7 +19,7 @@ namespace GameAssembly.CandleSystem
     private float _noiseOffset;
     private Vector2 _previousMoveDirection = Vector2.zero;
     private float _currentDirectionMultiplier = 1f; //temporary less tha 1 on a sharp turn
-    private const float SharpTurnCosThreshold = .7f;
+    private const float SHARP_TURN_COS_THRESHOLD = .7f;
 
     public bool IsFlickering { get; private set; }
 
@@ -61,7 +61,7 @@ namespace GameAssembly.CandleSystem
             _previousMoveDirection = currentDirection;
 
           float dot = Vector2.Dot(_previousMoveDirection, currentDirection);
-          if (dot < SharpTurnCosThreshold)
+          if (dot < SHARP_TURN_COS_THRESHOLD)
           {
             _currentDirectionMultiplier = directionChangeIntensityMultiplier;
           }

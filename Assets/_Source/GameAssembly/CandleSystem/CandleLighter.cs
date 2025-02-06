@@ -1,6 +1,8 @@
-﻿using GameAssembly.PlayerSystem;
+﻿using System;
+using GameAssembly.PlayerSystem;
 using UnityEngine;
 using System.Collections;
+using PlasticGui.WorkspaceWindow.Merge;
 
 namespace GameAssembly.CandleSystem
 {
@@ -11,6 +13,8 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private GameObject matchMiniGame;
     [SerializeField] private float disableDelay = 1f;
 
+    public event Action OnCandleTurnOn;
+
     public void Enable(bool enable)
     {
         gameObject.SetActive(enable);
@@ -20,12 +24,17 @@ namespace GameAssembly.CandleSystem
 
     private void Update()
     {
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
       DebugTurnOff();
-#endif
+//#endif
     }
 
-    public void TurnOn(bool enable) => dynamicCandleFlicker.TurnOn(enable);
+    public void TurnOn(bool enable)
+    {
+      dynamicCandleFlicker.TurnOn(enable);
+      if (enable) OnCandleTurnOn?.Invoke();
+    }
+
     public bool IsLit() => dynamicCandleFlicker.IsFlickering;
     public void Disable() => StartCoroutine(DelayedEnable(false, disableDelay));
 

@@ -10,6 +10,7 @@ namespace GameAssembly.CandleSystem
         [SerializeField] private Vector2 delayRange;
         [SerializeField] private Monster monster;
         [SerializeField] private LayerMask dangerousLayerMask;
+        [SerializeField] private Killer killer;
 
         private float _currTime;
         private bool _isReadyToSendMonster;
@@ -47,13 +48,11 @@ namespace GameAssembly.CandleSystem
             {
                 _isReadyToSendMonster = false;
                 monster.Enable(startPos, path, finishCallback);
+                killer.EnableKillState(true);
             }
         }
 
-        private void OnMonsterHide()
-        {
-            Debug.Log("MONSTER HIDE");
-        }
+        private void OnMonsterHide() => killer.EnableKillState(false);
 
         #region trigger events
 

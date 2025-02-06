@@ -10,14 +10,12 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private float minFrictionForFire;
     [SerializeField] private float frictionAccumulationSpeed;
     [SerializeField] private CandleLighter candleLighter;
-    [Space]
-    [SerializeField] private ParticleSystem sparkles;
+    [Space] [SerializeField] private ParticleSystem sparkles;
     [SerializeField] private float sparklesSpeedThreshold;
-    [Space]
-    [SerializeField] private bool debug;
-    
+    [Space] [SerializeField] private bool debug;
+
     private Camera _mainCamera;
-    
+
     private bool _isOverBox;
     private float _currFriction;
 
@@ -61,7 +59,7 @@ namespace GameAssembly.CandleSystem
       _dragSpeed = (transform.position - _lastPosition).magnitude / Time.deltaTime;
       _lastPosition = transform.position;
     }
-    
+
     private void AccumulateFriction() =>
       _currFriction = _isOverBox && _dragSpeed > 0
         ? _currFriction + frictionAccumulationSpeed * _dragSpeed * Time.deltaTime
@@ -69,12 +67,12 @@ namespace GameAssembly.CandleSystem
 
     private void TryLightCandle()
     {
-      if (!candleLighter.IsLit() 
+      if (!candleLighter.IsLit()
           && _currFriction >= minFrictionForFire)
-        {
+      {
         candleLighter.TurnOn(true);
         candleLighter.Disable();
-        }
+      }
     }
 
     private void EmitSparkles()
