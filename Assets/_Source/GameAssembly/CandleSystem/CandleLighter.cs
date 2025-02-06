@@ -11,19 +11,20 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private GameObject matchMiniGame;
     [SerializeField] private float disableDelay = 1f;
 
+    public void Enable(bool enable)
+    {
+        gameObject.SetActive(enable);
+        playerMovement.EnableMovement(!enable);
+        matchMiniGame.SetActive(enable);
+    }
+
     private void Update()
     {
 #if UNITY_EDITOR
       DebugTurnOff();
 #endif
     }
-    public void Enable(bool enable)
-    {
-      gameObject.SetActive(enable);
-      playerMovement.EnableMovement(!enable);
-      matchMiniGame.SetActive(enable);
-    }
-    
+
     public void TurnOn(bool enable) => dynamicCandleFlicker.TurnOn(enable);
     public bool IsLit() => dynamicCandleFlicker.IsFlickering;
     public void Disable() => StartCoroutine(DelayedEnable(false, disableDelay));
