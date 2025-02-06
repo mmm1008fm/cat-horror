@@ -7,6 +7,7 @@ namespace GameAssembly.PlayerSystem
         [SerializeField] private float speed = 5f;
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] private Animator animator;
+        private bool isMovable = true;
 
         private Vector2 movement;
 
@@ -18,6 +19,8 @@ namespace GameAssembly.PlayerSystem
 
         private void Update()
         {
+            if (isMovable)
+            {
             movement.x = Input.GetAxisRaw("Horizontal");
             movement.y = Input.GetAxisRaw("Vertical");
             movement = movement.normalized;
@@ -37,11 +40,23 @@ namespace GameAssembly.PlayerSystem
                 else if (movement.y > 0)
                     animator.Play("WalkUp");
             }
+            }
         }
 
         private void FixedUpdate()
         {
+                        if (isMovable)
+            {
             rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+            }
+            else
+            {
+                rb.velocity = Vector2.zero;
+            }
+        }
+        public void EnableMovement(bool enable)
+        {
+            isMovable = enable;
         }
     }
 }

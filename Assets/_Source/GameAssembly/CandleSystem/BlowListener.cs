@@ -13,7 +13,7 @@ namespace GameAssembly.CandleSystem
     [SerializeField] private float blowThreshold;
     [SerializeField] private float blowAccumulatingSpeed;
     [Space]
-    [SerializeField] private DynamicCandleFlicker candle;
+    [SerializeField] private CandleLighter candle;
     [Space]
     [SerializeField] private bool debug;
 
@@ -110,6 +110,7 @@ namespace GameAssembly.CandleSystem
       if (_currBlowForce > blowThreshold)
       {
         candle.TurnOn(false);
+        candle.Enable(true);
 #if UNITY_EDITOR
         if (debug)
           Debug.Log("BLOW ACCUMULATED! TURN OFF CANDLE!");

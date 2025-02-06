@@ -25,6 +25,7 @@ namespace GameAssembly.CandleSystem
 
     private void Awake()
     {
+      IsFlickering = true;
       if (candleLight == null)
         candleLight = GetComponent<Light2D>();
 
@@ -37,9 +38,6 @@ namespace GameAssembly.CandleSystem
     private void Update()
     {
       PerformFlicker();
-#if UNITY_EDITOR
-      DebugTurnOff();
-#endif
     }
 
     public void TurnOn(bool enable)
@@ -81,12 +79,6 @@ namespace GameAssembly.CandleSystem
         candleLight.intensity = baseIntensity * _currentDirectionMultiplier + (noise - 0.5f) * variance;
         candleLight.color = candleColorGradient.Evaluate(noise);
       }
-    }
-
-    private void DebugTurnOff()
-    {
-      if (Input.GetKeyDown(KeyCode.P))
-        TurnOn(false);
     }
   }
 }
