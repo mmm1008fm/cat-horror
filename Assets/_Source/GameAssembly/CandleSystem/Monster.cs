@@ -10,6 +10,7 @@ namespace GameAssembly.CandleSystem
   {
     [SerializeField] private float moveSpeed;
     [SerializeField] private AudioClip[] monsterSoundPool;
+    [SerializeField] private AudioClip monsterGoneSound;
     [SerializeField] private AudioSource monsterSource;
     private float _currInterpolation;
 
@@ -28,9 +29,17 @@ namespace GameAssembly.CandleSystem
       monsterSource.Play();
     }
 
+    private void PlayDisableSound()
+    {
+      if (!monsterSource || !monsterGoneSound) return;
+      monsterSource.clip = monsterGoneSound;
+      monsterSource.Play();
+    }
+
     private void Disable()
     {
       gameObject.SetActive(false);
+      PlayDisableSound();
     }
 
     private IEnumerator MoveOnPath(Vector3[] path, Action finishCallback = null)
