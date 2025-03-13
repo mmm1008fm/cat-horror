@@ -16,6 +16,7 @@ public class NoteController : MonoBehaviour
 
     [Header("Player settigs")]
     [SerializeField] private string playerLayerName = "Cat"; // Имя слоя, на котором находится игрок
+    [SerializeField] private AudioClip openNoteSound;
 
     private bool isPlayerInRange = false;  // Флаг, что игрок находится в зоне взаимодействия
     private bool isNoteOpen = false;       // Флаг, что записка открыта
@@ -57,10 +58,10 @@ public class NoteController : MonoBehaviour
     {
         if (noteUI != null)
         {
+            //SoundPlayer.Instance.PlaySound(openNoteSound);
             noteUI.SetActive(true);
             noteText.text = noteContent;
             isNoteOpen = true;
-
             if (activationHint != null)
                 activationHint.SetActive(false);
         }
