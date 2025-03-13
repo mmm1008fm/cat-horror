@@ -35,7 +35,7 @@ namespace GameAssembly.CandleSystem
     private void DragMatch()
     {
       Vector3 newPosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-      newPosition.z = 0;
+      newPosition.z = -1f;
       transform.position = newPosition;
     }
 

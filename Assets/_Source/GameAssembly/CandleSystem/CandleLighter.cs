@@ -2,7 +2,6 @@
 using GameAssembly.PlayerSystem;
 using UnityEngine;
 using System.Collections;
-using PlasticGui.WorkspaceWindow.Merge;
 
 namespace GameAssembly.CandleSystem
 {
@@ -17,7 +16,6 @@ namespace GameAssembly.CandleSystem
 
     public void EnableMinigame(bool enable)
     {
-        gameObject.SetActive(enable);
         playerMovement.EnableMovement(!enable);
         matchMiniGame.SetActive(enable);
     }

@@ -2,6 +2,7 @@
 using System.Collections;
 using GameAssembly.PlayerSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameAssembly.CandleSystem
 {
@@ -38,7 +39,7 @@ namespace GameAssembly.CandleSystem
       if (_canKill)
       {
         player.EnableMovement(false);
-        //TODO take player to main menu
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Debug.Log("You lose :(");
       }
     }
