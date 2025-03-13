@@ -6,7 +6,7 @@ public class NoteController : MonoBehaviour
     [Header("Note UI")]
     [SerializeField] private GameObject noteUI;
     [SerializeField] private TMP_Text noteText;
-    [SerializeField] private Sprite backgroundSprite;
+    //[SerializeField] private Sprite backgroundSprite;
 
     [Header("note settings")]
     [SerializeField] [TextArea] private string noteContent; // Текст, который будет отображаться в записке
