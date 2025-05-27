@@ -113,12 +113,12 @@ TextureImporter:
       name: ClockHandles_0
       rect:
         serializedVersion: 2
-        x: 175
-        y: 83
-        width: 39
-        height: 6
-      alignment: 9
-      pivot: {x: 0.00047654373, y: 0.49999747}
+        x: 127
+        y: 175
+        width: 6
+        height: 39
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -134,12 +134,12 @@ TextureImporter:
       name: ClockHandles_1
       rect:
         serializedVersion: 2
-        x: 176
-        y: 73
-        width: 24
-        height: 7
-      alignment: 9
-      pivot: {x: 0.0039456687, y: 0.4828186}
+        x: 136
+        y: 176
+        width: 7
+        height: 24
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -164,6 +164,7 @@ TextureImporter:
     nameFileIdTable:
       ClockHandles_0: 2045210119
       ClockHandles_1: -1294292615
+      ClockHandles_2: 231285281
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

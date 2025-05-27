@@ -24,7 +24,7 @@ public class SoundPlayer : MonoBehaviour
             Destroy(gameObject);
         else
         {
-            _instance = new SoundPlayer();
+            _instance = this;
             LoadVolumeSettings();
             DontDestroyOnLoad(this);
         }

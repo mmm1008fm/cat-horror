@@ -1,19 +1,20 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 using System;
 
 public class ClockHand : MonoBehaviour,IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    public  event Action<int> OnHandChanged;
-    public  event Action      OnHandReleased;
+    public event Action OnHandReleased;
 
     [Header("Setup")]
     [SerializeField] private bool isMinuteHand = true;
     [SerializeField] private Transform pivot;
     [SerializeField] private float snapStepDeg = 30f;
-
-    public  int CurrentMinute { get; private set; }    // 0-55
-    public  int CurrentHour   { get; private set; }    // 1-12
+    [SerializeField] private float snapDuration = 0.2f;
+    
+    [HideInInspector] public int CurrentHour;                 // 1-12
+    [HideInInspector] public int CurrentMinute;               // 0-59
 
     private bool dragging;
 
@@ -22,7 +23,11 @@ public class ClockHand : MonoBehaviour,IPointerDownHandler, IDragHandler, IPoint
         if (pivot == null) pivot = transform.parent;
     }
 
-    public void OnPointerDown(PointerEventData _) => dragging = true;
+    public void OnPointerDown(PointerEventData _) 
+    {
+        dragging = true;
+        transform.DOKill();
+    }
 
     public void OnDrag(PointerEventData e)
     {
@@ -32,32 +37,38 @@ public class ClockHand : MonoBehaviour,IPointerDownHandler, IDragHandler, IPoint
         float ang  = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         ang        = (ang + 360f) % 360f;
 
-        float snap = Mathf.Round(ang / snapStepDeg) * snapStepDeg;
-        transform.localEulerAngles = new Vector3(0, 0, -snap);   // hour
-
-        if (isMinuteHand)
-        {
-            CurrentMinute = Mathf.RoundToInt(snap / 6f);         // 6 = 1 min
-            OnHandChanged?.Invoke(CurrentMinute);
-        }
-        else
-        {
-            CurrentHour = Mathf.RoundToInt(snap / 30f);          // 30 = 1 hour
-            if (CurrentHour == 0) CurrentHour = 12;
-        }
+        transform.localEulerAngles = new Vector3(0, 0, ang);
     }
 
     public void OnPointerUp(PointerEventData _)
     {
+        if (!dragging) return;
         dragging = false;
-        OnHandReleased?.Invoke();
-    }
 
-    public void SetHourDirect(float hourFloat)
-    {
-        hourFloat      = (hourFloat + 12f) % 12f;
-        CurrentHour    = Mathf.RoundToInt(hourFloat == 0 ? 12 : hourFloat);
-        float angleDeg = hourFloat * 30f;
-        transform.localEulerAngles = new Vector3(0, 0, -angleDeg);
+        //angle scrapping
+        float currentAng = transform.localEulerAngles.z;
+        float snapped   = Mathf.Round(currentAng / snapStepDeg) * snapStepDeg;
+
+        //magnitising
+        transform
+          .DOLocalRotate(new Vector3(0, 0, snapped), snapDuration)
+          .SetEase(Ease.OutBack)
+          .SetUpdate(true)
+          .OnComplete(() =>
+          {
+              //update
+              if (isMinuteHand)
+              {
+                  CurrentMinute = Mathf.RoundToInt((360 - (snapped % 360f)) / 6f);
+                  Debug.Log($"Minute: {CurrentMinute}");
+              }
+              else
+              {
+                  CurrentHour = Mathf.RoundToInt((360 - (snapped % 360f) / 30f)) == 0 ? 12 : Mathf.RoundToInt((snapped % 360f) / 30f);
+                  Debug.Log($"Hour: {CurrentHour}");
+              }
+
+              OnHandReleased?.Invoke();
+          });
     }
 }

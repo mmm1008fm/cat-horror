@@ -5,7 +5,7 @@ public class ClockInteraction : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject clockUIPanel;
 
-    [Header("Player")]
+    [Header("Player/Keys")]
     [SerializeField] private string playerLayer = "Cat";
     [SerializeField] private KeyCode interactKey = KeyCode.E;
 
@@ -23,8 +23,11 @@ public class ClockInteraction : MonoBehaviour
         uiActive = !uiActive;
         clockUIPanel.SetActive(uiActive);
 
-        Cursor.lockState = uiActive ? CursorLockMode.None  : CursorLockMode.Locked;
+        Time.timeScale = uiActive ? 0f : 1f;
+        Cursor.lockState = uiActive ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible   = uiActive;
+
+        // TODO: при необходимости отключайте скрипт движения игрока
     }
 
     private void OnTriggerEnter2D(Collider2D col)

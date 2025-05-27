@@ -17,7 +17,7 @@ namespace GameAssembly.LevelSystem
 
         [SerializeField] private Image fadeImage;
         [SerializeField] private float fadeDuration = 1f;
-        private bool isTeleporting = false;
+        //private bool isTeleporting = false;
 
         private void Start()
         {
@@ -38,13 +38,13 @@ namespace GameAssembly.LevelSystem
     }
         private void TeleportRoutine()
         {
-            isTeleporting = true;
+            //isTeleporting = true;
             fadeImage.DOFade(1, fadeDuration)
                 .OnComplete(() =>
                 {
                     fadeImage.DOFade(0, fadeDuration).OnComplete(() =>
                     {
-                        isTeleporting = false;
+                        //isTeleporting = false;
                     });
                     if(objectToTeleport != null && teleportDestination != null)
                     {
