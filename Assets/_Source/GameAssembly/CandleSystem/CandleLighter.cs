@@ -18,6 +18,10 @@ namespace GameAssembly.CandleSystem
     {
         playerMovement.EnableMovement(!enable);
         matchMiniGame.SetActive(enable);
+        if (enable)
+          CursorManager.Instance.EnterInteractiveMode();
+        else
+          CursorManager.Instance.ExitInteractiveMode();
     }
 
     private void Update()

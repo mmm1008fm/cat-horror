@@ -35,6 +35,8 @@ public class ClockPuzzleManager : MonoBehaviour
     [Header("Fireplace Objects")]
     [SerializeField] private GameObject closedFireplace;
     [SerializeField] private GameObject openFireplace;
+    
+    private bool _puzzleSolved = false; 
 
     private void Awake()
     {
@@ -54,14 +56,22 @@ public class ClockPuzzleManager : MonoBehaviour
 
     private void OnEnable()
     {
-        minuteHand.OnHandReleased += CheckSolution;
-        hourHand  .OnHandReleased += CheckSolution;
+        if (!_puzzleSolved)
+        {
+            minuteHand.OnHandReleased += CheckSolution;
+            hourHand  .OnHandReleased += CheckSolution;   
+        }
+        return;
     }
 
     private void OnDisable()
     {
-        minuteHand.OnHandReleased -= CheckSolution;
-        hourHand  .OnHandReleased -= CheckSolution;
+        if (!_puzzleSolved)
+        {
+            minuteHand.OnHandReleased -= CheckSolution;
+            hourHand  .OnHandReleased -= CheckSolution;   
+        }
+        return;
     }
 
     private void CheckSolution()
@@ -75,41 +85,45 @@ public class ClockPuzzleManager : MonoBehaviour
 
     private void PuzzleSolvedFX()
     {
-        screenShake?.ShakeCamera();
-
-        if (victoryClip != null)
-            _audioSource.PlayOneShot(victoryClip);
-
-        if (messagePanel != null)
+        if (!_puzzleSolved)
         {
-            messagePanel.DOKill();
-            Sequence seq = DOTween.Sequence();
-            seq.Append(messagePanel.DOFade(1f, fadeTime).SetUpdate(true))
-               .AppendInterval(stayTime)
-               .Append(messagePanel.DOFade(0f, fadeTime).SetUpdate(true));
+            screenShake?.ShakeCamera();
+
+            if (victoryClip != null)
+                _audioSource.PlayOneShot(victoryClip);
+
+            if (messagePanel != null)
+            {
+                messagePanel.DOKill();
+                Sequence seq = DOTween.Sequence();
+                seq.Append(messagePanel.DOFade(1f, fadeTime).SetUpdate(true))
+                    .AppendInterval(stayTime)
+                    .Append(messagePanel.DOFade(0f, fadeTime).SetUpdate(true));
+            }
+
+            Time.timeScale = 1f;
+            if (clockUIPanel != null)
+                clockUIPanel.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            if (closedFireplace != null)
+                closedFireplace.SetActive(false);
+            if (openFireplace != null)
+                openFireplace.SetActive(true);
+
+            minuteHand.transform
+                .DOLocalRotate(new Vector3(0, 0, 360f), minuteRevolutionTime, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1)
+                .SetUpdate(true);
+
+            hourHand.transform
+                .DOLocalRotate(new Vector3(0, 0, 360f), hourRevolutionTime, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1)
+                .SetUpdate(true);
+            _puzzleSolved = true;
         }
-
-        Time.timeScale = 1f;
-        if (clockUIPanel != null)
-            clockUIPanel.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible   = false;
-
-        if (closedFireplace != null)
-            closedFireplace.SetActive(false);
-        if (openFireplace != null)
-            openFireplace.SetActive(true);
-
-        minuteHand.transform
-            .DOLocalRotate(new Vector3(0,0,360f), minuteRevolutionTime, RotateMode.FastBeyond360)
-            .SetEase(Ease.Linear)
-            .SetLoops(-1)
-            .SetUpdate(true);
-
-        hourHand.transform
-            .DOLocalRotate(new Vector3(0,0,360f), hourRevolutionTime, RotateMode.FastBeyond360)
-            .SetEase(Ease.Linear)
-            .SetLoops(-1)
-            .SetUpdate(true);
     }
 }

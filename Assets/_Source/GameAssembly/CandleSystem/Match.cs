@@ -30,6 +30,11 @@ namespace GameAssembly.CandleSystem
     private void OnMouseDrag()
     {
       DragMatch();
+      CursorManager.Instance.ApplyPressedCursor();
+    }
+    private void OnMouseUp()
+    {
+      CursorManager.Instance.ApplyDefaultCursor();
     }
 
     private void DragMatch()
@@ -72,6 +77,9 @@ namespace GameAssembly.CandleSystem
       {
         candleLighter.TurnOn(true);
         candleLighter.Disable();
+        CursorManager.Instance.ExitInteractiveMode();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
       }
     }
 

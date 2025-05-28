@@ -27,12 +27,12 @@ public class ClockHand : MonoBehaviour,IPointerDownHandler, IDragHandler, IPoint
     {
         dragging = true;
         transform.DOKill();
+        CursorManager.Instance.ApplyPressedCursor();
     }
 
     public void OnDrag(PointerEventData e)
     {
         if (!dragging) return;
-
         Vector2 dir = e.position - (Vector2)Camera.main.WorldToScreenPoint(pivot.position);
         float ang  = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         ang        = (ang + 360f) % 360f;
@@ -44,7 +44,7 @@ public class ClockHand : MonoBehaviour,IPointerDownHandler, IDragHandler, IPoint
     {
         if (!dragging) return;
         dragging = false;
-
+        CursorManager.Instance.ApplyDefaultCursor();
         //angle scrapping
         float currentAng = transform.localEulerAngles.z;
         float snapped   = Mathf.Round(currentAng / snapStepDeg) * snapStepDeg;

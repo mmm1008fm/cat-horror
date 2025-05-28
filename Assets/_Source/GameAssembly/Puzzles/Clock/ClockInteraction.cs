@@ -24,8 +24,16 @@ public class ClockInteraction : MonoBehaviour
         clockUIPanel.SetActive(uiActive);
 
         Time.timeScale = uiActive ? 0f : 1f;
-        Cursor.lockState = uiActive ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible   = uiActive;
+        if (uiActive)
+        {
+            CursorManager.Instance.EnterInteractiveMode();
+        }
+        else
+        {
+            CursorManager.Instance.ExitInteractiveMode();
+        }
+        //Cursor.lockState = uiActive ? CursorLockMode.None : CursorLockMode.Locked;
+        //Cursor.visible   = uiActive;
 
         // TODO: при необходимости отключайте скрипт движения игрока
     }
