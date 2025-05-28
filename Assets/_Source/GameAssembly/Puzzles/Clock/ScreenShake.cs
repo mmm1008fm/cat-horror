@@ -1,26 +1,39 @@
 using UnityEngine;
+using Cinemachine;
 using DG.Tweening;
 
 public class ScreenShake : MonoBehaviour
 {
-    public static ScreenShake Instance { get; private set; }
+  [SerializeField] private CinemachineVirtualCamera Ccamera;
+  [SerializeField] private float shakeDuration = 2f;
+  [SerializeField] private float _noiseAmplitude = 3f;
+  private CinemachineBasicMultiChannelPerlin _cameraNoise;
+  private void Awake()
+  {
+    _cameraNoise = Ccamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+    _cameraNoise.m_AmplitudeGain = 0f;
+    //ShakeCamera();
+    //StartCoroutine(ShakeCamera());
+  }
 
-    [SerializeField] private Transform camTransform;  // MainCamera
-    [SerializeField] private float strength = 1.1f;
-    [SerializeField] private int   vibrato  = 20;
-    [SerializeField] private float randomness = 90f;
-
-    private void Awake()
-    {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-    }
-
-    public void Shake(float duration)
-    {
-        if (camTransform == null) return;
-        camTransform.DOComplete(); // shake end
-        camTransform.DOShakePosition(duration, strength, vibrato, randomness)
-                    .OnComplete(() => camTransform.localPosition = Vector3.zero);
-    }
+  // [ContextMeuItem()]
+  public void ShakeCamera()
+  {
+    float amplitude = 0;
+    //increase amplitude
+    DOTween.To(() => amplitude, x => amplitude = x, _noiseAmplitude, shakeDuration/2f)
+      .OnUpdate(() =>
+      {
+        _cameraNoise.m_AmplitudeGain = amplitude;
+      })
+      //deacrease amplitude
+      .OnComplete(() =>
+      {
+        DOTween.To(() => amplitude, x => amplitude = x, 0f, shakeDuration/2f)
+          .OnUpdate(() =>
+          {
+            _cameraNoise.m_AmplitudeGain = amplitude;
+          });
+      });
+  }
 }
