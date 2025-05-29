@@ -1,4 +1,5 @@
 using System;
+using GameAssembly.MainMenu;
 using UnityEngine;
 
 namespace GameAssembly.CandleSystem
@@ -26,14 +27,16 @@ namespace GameAssembly.CandleSystem
     
     private void Start()
     {
+      Debug.Log(MicrophoneSettings.Instance.CurrentMicrophone);
+      Debug.Log(MicrophoneSettings.Instance.UseMicrophone);
       StartMicrophone();
     }
 
     private void StartMicrophone()
     {
-      if (Microphone.devices.Length > 0)
+      if (MicrophoneSettings.Instance.UseMicrophone)
       {
-        _microphone = Microphone.devices[0];
+        _microphone = MicrophoneSettings.Instance.CurrentMicrophone;
         _audioClip = Microphone.Start(_microphone, true, 10, SampleRate);
       }
       else

@@ -138,6 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1686060993380456302}
   - component: {fileID: 6897141514284686987}
+  - component: {fileID: 5423096497874528434}
   m_Layer: 0
   m_Name: SoundPlayer
   m_TagString: Untagged
@@ -176,3 +177,15 @@ MonoBehaviour:
   defaultAudioSource: {fileID: 5982936826359279238}
   audioMixer: {fileID: 24100000, guid: 863cfac2af102564c8c1b2836560a43b, type: 2}
   volume: 0
+--- !u!114 &5423096497874528434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4487482862027387350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88da6c1dd3804166b399cb2fb9aca1e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
