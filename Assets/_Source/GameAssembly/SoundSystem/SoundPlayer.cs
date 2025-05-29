@@ -24,7 +24,6 @@ public class SoundPlayer : MonoBehaviour
         else
         {
             _instance = this;
-            LoadVolumeSettings();
             DontDestroyOnLoad(this);
         }
     }
@@ -41,14 +40,11 @@ public class SoundPlayer : MonoBehaviour
 
  #region Volume
 
-    private void LoadVolumeSettings()
+    public void LoadVolumeSettings()
     {
-        if (PlayerPrefs.HasKey(_masterVolumeExposedName))
-        {
-            SetMasterVolume(GetSavedMasterVolume());
-            SetBgMusicVolume(GetSavedBgMusicVolume());
-            SetSFXVolume(GetSavedSFXVolume());
-        }
+        SetMasterVolume(GetSavedMasterVolume());
+        SetBgMusicVolume(GetSavedBgMusicVolume());
+        SetSFXVolume(GetSavedSFXVolume());
     }
     
     public float GetSavedMasterVolume() => GetSavedVolume(_masterVolumeExposedName);

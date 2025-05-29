@@ -18,6 +18,7 @@ namespace GameAssembly.MainMenu
 
         private void Awake()
         {
+            SoundPlayer.Instance.LoadVolumeSettings();
             SetupSliders();
         
             masterVolume.onValueChanged.AddListener(OnMasterVolumeChanged);
