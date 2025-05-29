@@ -2886,6 +2886,7 @@ MonoBehaviour:
   settingsPanel: {fileID: 1268506874}
   settingsButton: {fileID: 1854196601}
   exitSettingsButton: {fileID: 84884934}
+  settings: {fileID: 1268506875}
 --- !u!1 &1213615543
 GameObject:
   m_ObjectHideFlags: 0
@@ -4176,12 +4177,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5982936826359279238, guid: 7e0fdeff370f4ed48ad8c9a8d036b082, type: 3}
+      propertyPath: m_Volume
+      value: 0.191
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982936826359279238, guid: 7e0fdeff370f4ed48ad8c9a8d036b082, type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: e60eefdbfb409784cb7387a7102a7481, type: 3}
     - target: {fileID: 5982936826359279238, guid: 7e0fdeff370f4ed48ad8c9a8d036b082, type: 3}
       propertyPath: m_PlayOnAwake
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5982936826359279238, guid: 7e0fdeff370f4ed48ad8c9a8d036b082, type: 3}
       propertyPath: OutputAudioMixerGroup

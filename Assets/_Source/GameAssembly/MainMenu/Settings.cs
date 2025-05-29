@@ -16,10 +16,12 @@ namespace GameAssembly.MainMenu
         [SerializeField] private TMP_Dropdown microphoneDropdown;
         [SerializeField] private Slider microphoneSensitivity;
 
-        private void Awake()
+        public void Init()
         {
+            Debug.Log("LOAD!");
             SoundPlayer.Instance.LoadVolumeSettings();
             SetupSliders();
+            SoundPlayer.Instance.PlayTestSound();
         
             masterVolume.onValueChanged.AddListener(OnMasterVolumeChanged);
             bgMusicVolume.onValueChanged.AddListener(OnBgMusicVolumeChanged);

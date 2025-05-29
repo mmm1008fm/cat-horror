@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using GameAssembly.MainMenu;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,14 +15,24 @@ public class MainMenuView : MonoBehaviour
     [SerializeField] private CanvasGroup settingsPanel;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitSettingsButton;
+    [Space, SerializeField] private Settings settings;
 
-    private void Awake()
+    private bool _isSettingsInited;
+    public void Awake()
     {
-        ResetSettingsPanelView();
         settingsButton.onClick.AddListener(GoToSettings);
         exitSettingsButton.onClick.AddListener(LeaveSettings);
-        //TODO add subscription for play button to go to main scene
         playButton.onClick.AddListener(GoToMainScene);
+        ResetSettingsPanelView();
+    }
+
+    private void Update()
+    {
+        if (!_isSettingsInited)
+        {
+            _isSettingsInited = true;
+            settings.Init();
+        }
     }
 
     private void GoToMainScene()
