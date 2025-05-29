@@ -35,6 +35,11 @@ namespace EditorAssembly
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
             EditorSceneManager.OpenScene(MAIN_MENU_SCENE_PATH);
         }
+
+        public static void OpenScene(string sceneName)
+        {
+            EditorSceneManager.OpenScene(sceneName);
+        }
         
         [MenuItem("Cat/Meow-Meow")]
         public static void MeowButton() => Debug.Log("Meow");
@@ -43,20 +48,36 @@ namespace EditorAssembly
     [InitializeOnLoad]
     public class SceneSwitchLeftButton
     {
+        private static string _lastSceneName;
         static SceneSwitchLeftButton()
         {
             ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
+            EditorApplication.playModeStateChanged += OnUpdate;
+        }
+
+        private static void OnUpdate(PlayModeStateChange obj)
+        {
+            if (obj == PlayModeStateChange.EnteredEditMode
+                & _lastSceneName != null)
+            {
+                SceneSwitcherUtil.OpenScene(_lastSceneName);
+                _lastSceneName = null;
+            }
+                
         }
 
         static void OnToolbarGUI()
         {
             GUILayout.FlexibleSpace();
 
-            if(GUILayout.Button(new GUIContent(">", "Start Scene Main Menu"), ToolbarStyles.commandButtonStyle))
+            if(GUILayout.Button(new GUIContent("meow", "Start Scene Main Menu"), ToolbarStyles.commandButtonStyle))
             {
+                _lastSceneName = EditorSceneManager.GetActiveScene().name;
                 MySceneHelper.PlayScene(SceneSwitcherUtil.MAIN_MENU_SCENE_PATH, SceneSwitcherUtil.MAIN_MENU_SCENE_NAME);
             }
         }
+        
+        
     }
 }
 
@@ -91,7 +112,8 @@ static class ToolbarStyles
             fontSize = 16,
             alignment = TextAnchor.MiddleCenter,
             imagePosition = ImagePosition.ImageAbove,
-            fontStyle = FontStyle.Bold
+            fontStyle = FontStyle.Bold,
+            fixedWidth = 70
         };
     }
 }
