@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GameAssembly.MainMenu;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class Settings : MonoBehaviour
     [SerializeField] private Slider bgMusicVolume;
     [SerializeField] private Slider sfxVolume;
     [Header("Microphone")]
+    [SerializeField] private Toggle microphoneToggle;
     [SerializeField] private TMP_Dropdown microphoneDropdown;
 
     private void Awake()
@@ -24,6 +26,8 @@ public class Settings : MonoBehaviour
         sfxVolume.onValueChanged.AddListener(OnSFXVolumeChanged);
         
         DrawMicrophoneDropdown();
+        microphoneDropdown.onValueChanged.AddListener((int i) => OnDropdownValueChanged());
+        microphoneToggle.onValueChanged.AddListener(OnUseMicrophoneChanged);
     }
 
     #region Sliders
@@ -46,4 +50,13 @@ public class Settings : MonoBehaviour
         microphoneDropdown.ClearOptions();
         microphoneDropdown.AddOptions(Microphone.devices.ToList());
     }
+    
+    private void OnDropdownValueChanged()
+    {
+        MicrophoneSettings.Instance.SetMicrophone(
+            microphoneToggle.isOn ? microphoneDropdown.value.ToString() : null);
+    }
+    
+    private void OnUseMicrophoneChanged(bool isOn) => 
+        MicrophoneSettings.Instance.SetUseMicrophone(isOn);
 }

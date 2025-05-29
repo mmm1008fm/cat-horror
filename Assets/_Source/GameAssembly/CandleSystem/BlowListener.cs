@@ -32,7 +32,7 @@ namespace GameAssembly.CandleSystem
 
     private void StartMicrophone()
     {
-      if (Microphone.devices.Length > 0)
+      if (MicrophoneSettings.Instance.UseMicrophone)
       {
         _microphone = MicrophoneSettings.Instance.CurrentMicrophone;
         _audioClip = Microphone.Start(_microphone, true, 10, SampleRate);
