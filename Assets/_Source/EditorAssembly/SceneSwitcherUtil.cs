@@ -63,7 +63,6 @@ namespace EditorAssembly
                 SceneSwitcherUtil.OpenScene(_lastSceneName);
                 _lastSceneName = null;
             }
-                
         }
 
         static void OnToolbarGUI()
@@ -72,12 +71,11 @@ namespace EditorAssembly
 
             if(GUILayout.Button(new GUIContent("meow", "Start Scene Main Menu"), ToolbarStyles.commandButtonStyle))
             {
+                EditorSceneManager.SaveScene(SceneManager.GetActiveScene());
                 _lastSceneName = EditorSceneManager.GetActiveScene().name;
                 MySceneHelper.PlayScene(SceneSwitcherUtil.MAIN_MENU_SCENE_PATH, SceneSwitcherUtil.MAIN_MENU_SCENE_NAME);
             }
         }
-        
-        
     }
 }
 
