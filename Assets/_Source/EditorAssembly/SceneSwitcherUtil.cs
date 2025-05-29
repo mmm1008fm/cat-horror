@@ -12,7 +12,8 @@ namespace EditorAssembly
     {
         private const string MAIN_SCENE_PATH = "Assets/_Presentation/Scenes/MainScene.unity";
         private const string SANDBOX_SCENE_PATH = "Assets/_Presentation/Scenes/Sandbox.unity";
-        private const string MAIN_MENU_SCENE_PATH = "Assets/_Presentation/Scenes/MainMenu.unity";
+        public const string MAIN_MENU_SCENE_PATH = "Assets/_Presentation/Scenes/MainMenu.unity";
+        public const string MAIN_MENU_SCENE_NAME = "MainMenu";
         
         [MenuItem("Scenes/Switch To Main Scene")]
         public static void SwitchToMainScene()
@@ -53,7 +54,7 @@ namespace EditorAssembly
 
             if(GUILayout.Button(new GUIContent(">", "Start Scene Main Menu"), ToolbarStyles.commandButtonStyle))
             {
-                MySceneHelper.PlayScene("MainMenu");
+                MySceneHelper.PlayScene(SceneSwitcherUtil.MAIN_MENU_SCENE_PATH, SceneSwitcherUtil.MAIN_MENU_SCENE_NAME);
             }
         }
     }
@@ -62,12 +63,10 @@ namespace EditorAssembly
 #region Stuff
 static class MySceneHelper
 {
-    public static void PlayScene(string sceneName)
+    public static void PlayScene(string path, string sceneName)
     {
-        // Проверяем, загрузили ли мы указанную сцену
         if (EditorSceneManager.GetActiveScene().name != sceneName)
         {
-            string path = "Assets/_Presentation/Scenes/" + sceneName + ".unity"; 
             if (!System.IO.File.Exists(path))
             {
                 Debug.LogError("Сцена не найдена: " + path);
@@ -77,7 +76,6 @@ static class MySceneHelper
             EditorSceneManager.OpenScene(path);
         }
         
-        // Запускаем плей режим
         EditorApplication.ExecuteMenuItem("Edit/Play");
     }
 }
