@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +11,21 @@ namespace GameAssembly.CombinationLockSystem
   {
     [SerializeField] private TextMeshProUGUI inputText;
     [SerializeField] private Button backspaceBtn;
+    [SerializeField] private Button entereBtn;
     [SerializeField] private List<Button> buttons;
     [SerializeField] private int maxLength;
     [SerializeField] private string correctPassword;
-    private List<int> _input = new();
+    [Header("Sound feedback")]
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip loseSound;
+    [SerializeField] private AudioClip winSound;
+    [Header("Level feedback")]
+    [SerializeField] private List<GameObject> toOn;
+    [SerializeField] private Transform movable;
+    [SerializeField] private Transform targetPosition;
+    [SerializeField] private float duration;
+    
+    private readonly List<int> _input = new();
     private int _correctPassword;
     private void Awake()
     {
@@ -25,6 +37,7 @@ namespace GameAssembly.CombinationLockSystem
       }
       
       backspaceBtn.onClick.AddListener(ClearInput);
+      entereBtn.onClick.AddListener(ValidateInput);
       DrawInput();
     }
 
@@ -34,7 +47,6 @@ namespace GameAssembly.CombinationLockSystem
       {
         _input.Add(value);
         DrawInput();
-        ValidateInput();
       }
     }
 
@@ -53,10 +65,14 @@ namespace GameAssembly.CombinationLockSystem
           else
           {
             isCorrect = false;
+            SoundPlayer.Instance.PlaySound(source, loseSound);
             break;
           }
         }
-        //TODO paste win logic
+
+        SoundPlayer.Instance.PlaySound(source, winSound);
+        TurnOnObjects();
+        Move();
       }
     }
 
@@ -75,5 +91,15 @@ namespace GameAssembly.CombinationLockSystem
       _input.Clear();
       DrawInput();
     }
+
+    #region Level
+    private void Move() => movable.DOMove(targetPosition.position, duration);
+
+    private void TurnOnObjects()
+    {
+      foreach (var obj in toOn)
+        obj.SetActive(true);
+    }
+    #endregion
   }
 }
