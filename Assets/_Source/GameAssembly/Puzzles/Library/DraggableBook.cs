@@ -35,7 +35,7 @@ public class DraggableBook : MonoBehaviour,
         dragging       = true;
         startMousePos  = eventData.position;
         startLocalPos  = rectTransform.localPosition;
-        rb.DOKill(); // убираем твины, если были
+        rb.DOKill();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -53,7 +53,7 @@ public class DraggableBook : MonoBehaviour,
         float pulledDistance = Mathf.Abs(rectTransform.localPosition.x - startLocalPos.x);
         if (isLever && pulledDistance >= leverThreshold)
         {
-            onLeverPulled?.Invoke();
+            onLeverPulled?.Invoke();     
         }
         else if (!isLever && pulledDistance >= removeThreshold)
         {
