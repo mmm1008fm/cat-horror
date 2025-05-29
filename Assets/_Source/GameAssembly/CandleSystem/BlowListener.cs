@@ -29,7 +29,14 @@ namespace GameAssembly.CandleSystem
     {
       Debug.Log(MicrophoneSettings.Instance.CurrentMicrophone);
       Debug.Log(MicrophoneSettings.Instance.UseMicrophone);
+      
+      Setup();
       StartMicrophone();
+    }
+
+    private void Setup()
+    {
+      thresholdVolume.x = MicrophoneSettings.Instance.MicrophoneSensitivity;
     }
 
     private void StartMicrophone()
