@@ -2,6 +2,7 @@
 using GameAssembly.PlayerSystem;
 using UnityEngine;
 using System.Collections;
+using GameAssembly.MainMenu;
 
 namespace GameAssembly.CandleSystem
 {
@@ -27,7 +28,7 @@ namespace GameAssembly.CandleSystem
     private void Update()
     {
 //#if UNITY_EDITOR
-      DebugTurnOff();
+      KeyTurnOff();
 //#endif
     }
 
@@ -40,8 +41,11 @@ namespace GameAssembly.CandleSystem
     public bool IsLit() => dynamicCandleFlicker.IsFlickering;
     public void Disable() => StartCoroutine(DelayedEnable(false, disableDelay));
 
-    private void DebugTurnOff()
+    private void KeyTurnOff()
     {
+#if !UNITY_EDITOR
+      if (!MicrophoneSettings.Instance.UseMicrophone)
+#endif
       if (Input.GetKeyDown(KeyCode.P))
       {
         TurnOn(false);
