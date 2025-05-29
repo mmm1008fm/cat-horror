@@ -66,7 +66,7 @@ namespace GameAssembly.CombinationLockSystem
           {
             isCorrect = false;
             SoundPlayer.Instance.PlaySound(source, loseSound);
-            break;
+            return;
           }
         }
 
@@ -105,7 +105,11 @@ namespace GameAssembly.CombinationLockSystem
     }
 
     #region Level
-    private void Move() => movable.DOMove(targetPosition.position, duration);
+    private void Move()
+    {
+      if (movable)
+        movable.DOMove(targetPosition.position, duration);
+    }
 
     private void TurnOnObjects()
     {
