@@ -34,6 +34,8 @@ public class SoundPlayer : MonoBehaviour
         source.clip = clip;
         source.Play();
     }
+    
+    public void PlayTestSound() => defaultAudioSource.Play();
 
     public void PlaySound(AudioClip clip) => PlaySound(defaultAudioSource, clip);
     #endregion
