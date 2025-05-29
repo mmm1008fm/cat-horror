@@ -70,7 +70,8 @@ namespace GameAssembly.CombinationLockSystem
             return;
           }
         }
-
+        Time.timeScale = 1f;
+        CursorManager.Instance.ExitInteractiveMode();
         SoundPlayer.Instance.PlaySound(source, winSound);
         TurnOnObjects();
         BlockNumberButtons();

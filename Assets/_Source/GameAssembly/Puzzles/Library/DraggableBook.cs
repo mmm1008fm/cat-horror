@@ -32,7 +32,6 @@ public class DraggableBook : MonoBehaviour,
     private bool         acted    = false;
     private RectTransform rectTransform;
     private UnityEngine.UI.Image uiImage;
-    private AudioSource _audioSource;
 
     private void Awake()
     {
@@ -89,7 +88,7 @@ public class DraggableBook : MonoBehaviour,
             screenShake?.ShakeCamera();
 
             if (victoryClip != null)
-                _audioSource.PlayOneShot(victoryClip);
+                SoundPlayer.Instance.PlaySound(victoryClip);
 
             if (messagePanel != null)
             {
