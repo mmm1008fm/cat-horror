@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,9 +13,10 @@ public class SoundPlayer : MonoBehaviour
     [SerializeField, Range(0, 1)] private float volume;
 
     private readonly string _masterVolumeExposedName = "MasterVolume";
+    private readonly string _bgMusicVolumeExposedName = "BgMusicVolumeVolume";
+    private readonly string _sfxVolumeExposedName = "SFXVolumeVolume";
 
 #region Singleton
-
     private static SoundPlayer _instance;
     public static SoundPlayer Instance => _instance;
 #endregion
@@ -45,27 +47,43 @@ public class SoundPlayer : MonoBehaviour
     private void LoadVolumeSettings()
     {
         if (PlayerPrefs.HasKey(_masterVolumeExposedName))
-            SetVolume(PlayerPrefs.GetFloat(_masterVolumeExposedName));
+        {
+            SetMasterVolume(GetSavedMasterVolume());
+            SetBgMusicVolume(GetSavedBgMusicVolume());
+            SetSFXVolume(GetSavedSFXVolume());
+        }
     }
+    
+    public float GetSavedMasterVolume() => GetSavedVolume(_masterVolumeExposedName);
+    public float GetSavedBgMusicVolume() => GetSavedVolume(_bgMusicVolumeExposedName);
+    public float GetSavedSFXVolume() => GetSavedVolume(_sfxVolumeExposedName);
+    private float GetSavedVolume(string key) => PlayerPrefs.GetFloat(key);
 
+    public void SetMasterVolume(float volume) => SetVolume(_masterVolumeExposedName, volume);
+    public void SetBgMusicVolume(float volume) => SetVolume(_bgMusicVolumeExposedName, volume);
+    public void SetSFXVolume(float volume) => SetVolume(_sfxVolumeExposedName, volume);
+
+    /// <param name="key">mixer exposed param name</param>
     /// <param name="volume">from 0 to 1 in %</param>
-    private void SetVolume(float volume)
+    private void SetVolume(string key, float volume)
     {
         float value = Mathf.Log10(volume) * 20;
-        audioMixer.SetFloat(_masterVolumeExposedName, value);
+        audioMixer.SetFloat(key, value);
+        SaveVolume(key, volume);
     }
 
-    /// <param name="value">straight value from mixer</param>
-    private void SaveVolume(float value)
+    /// <param name="key">player prefs key</param>
+    /// <param name="value">from 0 to 1 in %</param>
+    private void SaveVolume(string key, float value)
     {
-        PlayerPrefs.SetFloat(_masterVolumeExposedName, value);
+        PlayerPrefs.SetFloat(key, value);
         PlayerPrefs.Save();
     }
 
 #if UNITY_EDITOR
     private void Update()
     {
-        SetVolume(volume);
+        SetMasterVolume(volume);
     }
 #endif
     #endregion
