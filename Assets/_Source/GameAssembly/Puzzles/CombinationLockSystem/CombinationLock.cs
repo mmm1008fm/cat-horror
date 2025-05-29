@@ -24,6 +24,7 @@ namespace GameAssembly.CombinationLockSystem
     [SerializeField] private Transform movable;
     [SerializeField] private Transform targetPosition;
     [SerializeField] private float duration;
+
     
     private readonly List<int> _input = new();
     private int _correctPassword;
@@ -77,6 +78,7 @@ namespace GameAssembly.CombinationLockSystem
         Move();
       }
     }
+
 
     private void HidePuzzleUI() => gameObject.SetActive(false);
 
