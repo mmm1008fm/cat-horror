@@ -72,7 +72,19 @@ namespace GameAssembly.CombinationLockSystem
 
         SoundPlayer.Instance.PlaySound(source, winSound);
         TurnOnObjects();
+        BlockNumberButtons();
+        HidePuzzleUI();
         Move();
+      }
+    }
+
+    private void HidePuzzleUI() => gameObject.SetActive(false);
+
+    private void BlockNumberButtons()
+    {
+      foreach (var btn in buttons)
+      {
+        btn.interactable = false;
       }
     }
 
