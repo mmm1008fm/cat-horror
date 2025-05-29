@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
+using UnityToolbarExtender;
 
 namespace EditorAssembly
 {
@@ -27,5 +29,66 @@ namespace EditorAssembly
         [MenuItem("Cat/Meow-Meow")]
         public static void MeowButton() => Debug.Log("Meow");
     }
-#endif
+    
+    [InitializeOnLoad]
+    public class SceneSwitchLeftButton
+    {
+        static SceneSwitchLeftButton()
+        {
+            ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
+        }
+
+        static void OnToolbarGUI()
+        {
+            GUILayout.FlexibleSpace();
+
+            if(GUILayout.Button(new GUIContent(">", "Start Scene Main Menu"), ToolbarStyles.commandButtonStyle))
+            {
+                MySceneHelper.PlayScene("MainMenu");
+            }
+        }
+    }
 }
+
+#region Stuff
+static class MySceneHelper
+{
+    public static void PlayScene(string sceneName)
+    {
+        // Проверяем, загрузили ли мы указанную сцену
+        if (EditorSceneManager.GetActiveScene().name != sceneName)
+        {
+            string path = "Assets/_Presentation/Scenes/" + sceneName + ".unity"; 
+            if (!System.IO.File.Exists(path))
+            {
+                Debug.LogError("Сцена не найдена: " + path);
+                return;
+            }
+
+            EditorSceneManager.OpenScene(path);
+        }
+        
+        // Запускаем плей режим
+        EditorApplication.ExecuteMenuItem("Edit/Play");
+    }
+}
+
+static class ToolbarStyles
+{
+    public static readonly GUIStyle commandButtonStyle;
+
+    static ToolbarStyles()
+    {
+        commandButtonStyle = new GUIStyle("Command")
+        {
+            fontSize = 16,
+            alignment = TextAnchor.MiddleCenter,
+            imagePosition = ImagePosition.ImageAbove,
+            fontStyle = FontStyle.Bold
+        };
+    }
+}
+#endregion
+
+#endif
+
