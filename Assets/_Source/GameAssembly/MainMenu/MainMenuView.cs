@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuView : MonoBehaviour
@@ -20,6 +21,12 @@ public class MainMenuView : MonoBehaviour
         settingsButton.onClick.AddListener(GoToSettings);
         exitSettingsButton.onClick.AddListener(LeaveSettings);
         //TODO add subscription for play button to go to main scene
+        playButton.onClick.AddListener(GoToMainScene);
+    }
+
+    private void GoToMainScene()
+    {
+        SceneManager.LoadScene(1);
     }
 
     private void ResetSettingsPanelView()

@@ -9,12 +9,9 @@ public class SoundPlayer : MonoBehaviour
     [SerializeField] private AudioSource defaultAudioSource;
     [SerializeField] private AudioMixer audioMixer;
 
-    [Header("Volume in-Editor Settings")]
-    [SerializeField, Range(0, 1)] private float volume;
-
     private readonly string _masterVolumeExposedName = "MasterVolume";
-    private readonly string _bgMusicVolumeExposedName = "BgMusicVolumeVolume";
-    private readonly string _sfxVolumeExposedName = "SFXVolumeVolume";
+    private readonly string _bgMusicVolumeExposedName = "BgMusicVolume";
+    private readonly string _sfxVolumeExposedName = "SFXVolume";
 
 #region Singleton
     private static SoundPlayer _instance;
@@ -59,17 +56,18 @@ public class SoundPlayer : MonoBehaviour
     public float GetSavedSFXVolume() => GetSavedVolume(_sfxVolumeExposedName);
     private float GetSavedVolume(string key) => PlayerPrefs.GetFloat(key);
 
-    public void SetMasterVolume(float volume) => SetVolume(_masterVolumeExposedName, volume);
-    public void SetBgMusicVolume(float volume) => SetVolume(_bgMusicVolumeExposedName, volume);
-    public void SetSFXVolume(float volume) => SetVolume(_sfxVolumeExposedName, volume);
+    public void SetMasterVolume(float value) => SetVolume(_masterVolumeExposedName, value);
+    public void SetBgMusicVolume(float value) => SetVolume(_bgMusicVolumeExposedName, value);
+    public void SetSFXVolume(float value) => SetVolume(_sfxVolumeExposedName, value);
 
     /// <param name="key">mixer exposed param name</param>
-    /// <param name="volume">from 0 to 1 in %</param>
-    private void SetVolume(string key, float volume)
+    /// <param name="value">from 0 to 1 in %</param>
+    private void SetVolume(string key, float value)
     {
-        float value = Mathf.Log10(volume) * 20;
-        audioMixer.SetFloat(key, value);
-        SaveVolume(key, volume);
+        float tempValue = Mathf.Log10(value) * 20;
+        if (value == 0) tempValue = -80;
+        audioMixer.SetFloat(key, tempValue);
+        SaveVolume(key, value);
     }
 
     /// <param name="key">player prefs key</param>
@@ -79,12 +77,5 @@ public class SoundPlayer : MonoBehaviour
         PlayerPrefs.SetFloat(key, value);
         PlayerPrefs.Save();
     }
-
-#if UNITY_EDITOR
-    private void Update()
-    {
-        SetMasterVolume(volume);
-    }
-#endif
     #endregion
 }

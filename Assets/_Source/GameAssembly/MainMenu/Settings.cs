@@ -28,6 +28,14 @@ public class Settings : MonoBehaviour
         DrawMicrophoneDropdown();
         microphoneDropdown.onValueChanged.AddListener((int i) => OnDropdownValueChanged());
         microphoneToggle.onValueChanged.AddListener(OnUseMicrophoneChanged);
+        
+        SetupDefaults();
+    }
+
+    private void SetupDefaults()
+    {
+        OnDropdownValueChanged();
+        OnUseMicrophoneChanged(microphoneToggle.isOn);
     }
 
     #region Sliders
@@ -39,7 +47,6 @@ public class Settings : MonoBehaviour
     }
     
     private void SetupSlider(Slider slider, float value) => slider.value = value;
-
     private void OnMasterVolumeChanged(float value) => SoundPlayer.Instance.SetMasterVolume(value);
     private void OnBgMusicVolumeChanged(float value) => SoundPlayer.Instance.SetBgMusicVolume(value);
     private void OnSFXVolumeChanged(float value) => SoundPlayer.Instance.SetSFXVolume(value);
@@ -54,7 +61,7 @@ public class Settings : MonoBehaviour
     private void OnDropdownValueChanged()
     {
         MicrophoneSettings.Instance.SetMicrophone(
-            microphoneToggle.isOn ? microphoneDropdown.value.ToString() : null);
+            microphoneToggle.isOn ? microphoneDropdown.options[microphoneDropdown.value].text : null);
     }
     
     private void OnUseMicrophoneChanged(bool isOn) => 

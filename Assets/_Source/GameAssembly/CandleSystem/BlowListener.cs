@@ -27,6 +27,8 @@ namespace GameAssembly.CandleSystem
     
     private void Start()
     {
+      Debug.Log(MicrophoneSettings.Instance.CurrentMicrophone);
+      Debug.Log(MicrophoneSettings.Instance.UseMicrophone);
       StartMicrophone();
     }
 
