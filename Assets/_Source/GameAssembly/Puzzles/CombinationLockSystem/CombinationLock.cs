@@ -21,6 +21,7 @@ namespace GameAssembly.CombinationLockSystem
     [SerializeField] private AudioClip winSound;
     [Header("Level feedback")]
     [SerializeField] private List<GameObject> toOn;
+    [SerializeField] private List<GameObject> toOff;
     [SerializeField] private Transform movable;
     [SerializeField] private Transform targetPosition;
     [SerializeField] private float duration;
@@ -118,6 +119,11 @@ namespace GameAssembly.CombinationLockSystem
     {
       foreach (var obj in toOn)
         obj.SetActive(true);
+      if (toOff.Count > 0)
+      {
+        foreach (var obj in toOff)
+          obj.SetActive(false);
+      }
     }
     #endregion
   }

@@ -15,6 +15,36 @@ namespace GameAssembly.MainMenu
         [SerializeField] private Toggle microphoneToggle;
         [SerializeField] private TMP_Dropdown microphoneDropdown;
         [SerializeField] private Slider microphoneSensitivity;
+        [SerializeField] private CanvasGroup settingsPanel;
+        [SerializeField] private Button EscButton;
+        
+        #region Singleton
+        private static Settings _instance;
+        public static Settings Instance => _instance;
+        #endregion
+        private void Awake()
+        {
+        if (_instance != null)
+            Destroy(gameObject);
+        else
+        {
+            _instance = this;
+            DontDestroyOnLoad(this);
+        }
+        }
+        public void Show()
+        {
+            gameObject.SetActive(true);
+            settingsPanel.alpha = 1;
+        }
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+            settingsPanel.alpha = 0;
+            CursorManager.Instance.ExitInteractiveMode();
+            CursorManager.Instance.HideCursor();
+        }
+
 
         public void Init()
         {
@@ -22,17 +52,19 @@ namespace GameAssembly.MainMenu
             SoundPlayer.Instance.LoadVolumeSettings();
             SetupSliders();
             SoundPlayer.Instance.PlayTestSound();
-        
+
             masterVolume.onValueChanged.AddListener(OnMasterVolumeChanged);
             bgMusicVolume.onValueChanged.AddListener(OnBgMusicVolumeChanged);
             sfxVolume.onValueChanged.AddListener(OnSFXVolumeChanged);
-        
+
             DrawMicrophoneDropdown();
             microphoneDropdown.onValueChanged.AddListener(_ => OnDropdownValueChanged());
             microphoneToggle.onValueChanged.AddListener(OnUseMicrophoneChanged);
-            
+
             microphoneSensitivity.onValueChanged.AddListener(OnSensitivitySliderValueChanged);
-        
+
+            EscButton.onClick.AddListener(Hide);
+
             SetupDefaults();
         }
 

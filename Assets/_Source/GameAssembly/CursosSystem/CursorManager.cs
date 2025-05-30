@@ -1,3 +1,4 @@
+using GameAssembly.MainMenu;
 using UnityEngine;
 
 public class CursorManager : MonoBehaviour
@@ -70,12 +71,14 @@ public class CursorManager : MonoBehaviour
 
         if (_isPaused)
         {
+            Settings.Instance.Show();
             ShowCursor();
             ApplyDefaultCursor();
         }
         else
         {
             ExitInteractiveMode();
+            Settings.Instance.Hide();
         }
     }
 }
